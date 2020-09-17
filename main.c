@@ -186,6 +186,7 @@ enum {
 	OPT_TOKEN_MODE,
 	OPT_TOKEN_SECRET,
 	OPT_OS,
+	OPT_MAC_ADDRESS,
 	OPT_TIMESTAMP,
 	OPT_PFS,
 	OPT_PROXY_AUTH,
@@ -274,6 +275,7 @@ static const struct option long_options[] = {
 	OPTION("token-mode", 1, OPT_TOKEN_MODE),
 	OPTION("token-secret", 1, OPT_TOKEN_SECRET),
 	OPTION("os", 1, OPT_OS),
+	OPTION("mac-address", 1, OPT_MAC_ADDRESS),
 	OPTION("no-xmlpost", 0, OPT_NO_XMLPOST),
 	OPTION("dump-http-traffic", 0, OPT_DUMP_HTTP),
 	OPTION("no-system-trust", 0, OPT_NO_SYSTEM_TRUST),
@@ -899,6 +901,7 @@ static void usage(void)
 	printf("      --useragent=STRING          %s\n", _("HTTP header User-Agent: field"));
 	printf("      --local-hostname=STRING     %s\n", _("Local hostname to advertise to server"));
 	printf("      --os=STRING                 %s\n", _("OS type (linux,linux-64,win,...) to report"));
+	printf("      --mac-address=MAC-ADDRESS   %s\n", _("Set mac address"));
 	printf("      --version-string=STRING     %s\n", _("reported version string during authentication"));
 	printf("                                  (%s %s)\n", _("default:"), openconnect_version_str);
 
@@ -1276,6 +1279,10 @@ static int autocomplete(int argc, char **argv)
 				complete_words(comp_opt, prefixlen, "mac-intel", "android",
 					       "linux-64", "linux", "apple-ios",
 					       "win", NULL);
+				break;
+
+			case OPT_MAC_ADDRESS: /* --mac-address */
+				complete_words(comp_opt, prefixlen, "your-mac-address", NULL);
 				break;
 
 			case OPT_COMPRESSION: /* --compression */
@@ -1773,6 +1780,9 @@ int main(int argc, char **argv)
 					dup_config_arg(),
 					xstrdup("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"));
 			}
+			break;
+		case OPT_MAC_ADDRESS:
+			vpninfo->mac_address = config_arg;
 			break;
 		case OPT_PASSTOS:
 			openconnect_set_pass_tos(vpninfo, 1);

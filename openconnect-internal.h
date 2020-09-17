@@ -416,6 +416,7 @@ struct openconnect_info {
 #endif
 	char *proxy_type;
 	char *proxy;
+	char *mac_address;
 	int proxy_port;
 	int proxy_fd;
 	char *proxy_user;

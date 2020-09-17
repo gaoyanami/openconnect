@@ -719,7 +719,7 @@ static xmlDocPtr xmlpost_new_query(struct openconnect_info *vpninfo, const char 
 				   xmlNodePtr *rootp)
 {
 	xmlDocPtr doc;
-	xmlNodePtr root, node;
+	xmlNodePtr root, node, macAddress;
 
 	doc = xmlNewDoc(XCAST("1.0"));
 	if (!doc)
@@ -743,6 +743,12 @@ static xmlDocPtr xmlpost_new_query(struct openconnect_info *vpninfo, const char 
 		goto bad;
 
 	node = xmlNewTextChild(root, NULL, XCAST("device-id"), XCAST(vpninfo->platname));
+
+	if (vpninfo->mac_address != NULL) {
+		node = xmlNewTextChild(root, NULL, XCAST("mac-address-list"), XCAST(macAddress));
+		macAddress = xmlNewTextChild(node, NULL, XCAST("mac-address"), XCAST(vpninfo->mac_address));
+	}
+
 	if (!node)
 		goto bad;
 	if (vpninfo->mobile_platform_version) {
